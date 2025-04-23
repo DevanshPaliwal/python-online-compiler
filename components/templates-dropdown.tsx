@@ -112,243 +112,7 @@ else:
 `,
   },
   {
-    name: "propositional",
-    code: `class propLogic:
-    def propFun(self, sentence):
-        arr = ['~', '+', '.', '->']
-        stack = []  
-        negate_inside = False  
-        i = 0
-        while i < len(sentence):
-            char = sentence[i]
-            
-            if char == '~' and i + 1 < len(sentence) and sentence[i + 1] == '(':
-                stack.append(True) 
-                negate_inside = not negate_inside 
-                print('(', end=' ')
-                i += 1 
-            
-            elif char == ')':
-                if stack:
-                    stack.pop()  
-                    negate_inside = not negate_inside  
-                print(')', end=' ')
-            
-            elif char in arr:
-                if negate_inside:  
-                    if char == '+':
-                        print('AND', end=' ')
-                    elif char == '.':
-                        print('OR', end=' ')
-                    else:
-                        print({'~': ' ', '->': 'IF'}[char], end=' ')
-                else:
-                    print({'~': 'NOT', '+': 'OR', '.': 'AND', '->': 'IF'}[char], end=' ')
-            
-            else:
-                if negate_inside:
-                    print(f'NOT {char}', end=' ')
-                else:
-                    print(char, end=' ')
-            
-            i += 1
-
-obj1 = propLogic()
-sentence = input("Enter a sentence: ")
-obj1.propFun(sentence)
-`,
-  },
-  {
-    name: "predicate",
-    code: `class PredicateLogic:
-    def __init__(self):
-        self.clauses = [] # list of clauses
-
-    def add_clause(self, clause):
-        self.clauses.append(clause)
-
-    def unify(self, literal1, literal2):
-        if literal1 == literal2:
-            return {}
-        return None
-
-    def resolve(self, new_clause):
-        for clause in self.clauses:
-            for literal1 in new_clause:
-                for literal2 in clause:
-                    if literal1.startswith('¬'):
-                        negated_literal = literal1[1:]
-                    else:
-                        negated_literal = '¬' + literal1
-
-                    substitution = self.unify(negated_literal, literal2)
-                    if substitution is not None:
-                        resolved_clause = self.apply_substitution(new_clause, clause, substitution)
-                        print(f"Resolved clause: {resolved_clause}")
-                        return resolved_clause
-        return None
-
-    def apply_substitution(self, clause1, clause2, substitution):
-        resolved_clause = [lit for lit in clause1 if lit not in substitution]
-        resolved_clause += [lit for lit in clause2 if lit not in substitution]
-        return resolved_clause
-
-    def __str__(self):
-        # Return a string representation of the clauses.
-        
-        return '\n'.join([' OR '.join(clause) for clause in self.clauses])
-
-logic = PredicateLogic()
-logic.add_clause(['P(x)', 'Q(y)'])
-logic.add_clause(['¬P(a)', 'R(z)'])
-print("Clauses:")
-print(logic)
-resolved = logic.resolve(['¬Q(y)', 'S(c)'])
-print("After resolution:")
-print(resolved)`,
-  },
-  {
-    name: "logistic reg",
-    code: `import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score, classification_report
-import matplotlib.pyplot as plt
-
-# Step 1: Load the dataset (binary classification)
-X = np.array([[1], [2], [3], [4], [5]])   # Feature
-y = np.array([0, 0, 0, 1, 1])             # Target (binary)
-
-# Step 2: Split data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-# Step 3: Train the model
-model = LogisticRegression()
-model.fit(X_train, y_train)
-
-# Step 4: Make predictions
-y_pred = model.predict(X_test)
-
-# Step 5: Evaluate the model
-accuracy = accuracy_score(y_test, y_pred)
-report = classification_report(y_test, y_pred)
-
-# Step 6: Visualize the decision boundary
-X_vals = np.linspace(X.min() - 1, X.max() + 1, 100).reshape(-1, 1)
-y_probs = model.predict_proba(X_vals)[:, 1]
-
-plt.plot(X_vals, y_probs, color='red', label='Logistic Curve')
-plt.scatter(X, y, color='blue', label='Data points')
-plt.axhline(0.5, color='green', linestyle='--', label='Decision Boundary')
-plt.title('Logistic Regression')
-plt.xlabel('X')
-plt.ylabel('Probability')
-plt.legend()
-plt.show()
-
-# Print evaluation metrics
-print(f'Accuracy: {accuracy}')
-print('Classification Report:')
-print(report)
-`,
-  },
-  {
-    name: "linear regression",
-    code: `import numpy as np
-import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error, r2_score
-
-# Step 1: Generate or load dataset
-X = np.array([[1], [2], [3], [4], [5]])  # Feature (Independent variable)
-y = np.array([1, 2, 2.9, 4.1, 5.2])    # Target (Dependent variable)
-
-# Step 2: Split data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-# Step 3: Train the model
-model = LinearRegression()
-model.fit(X_train, y_train)
-
-# Step 4: Make predictions
-y_pred = model.predict(X_test)
-
-# Step 5: Evaluate the model
-mse = mean_squared_error(y_test, y_pred)
-r2 = r2_score(y_test, y_pred)
-
-# Step 6: Visualize the results
-plt.scatter(X, y, color='blue')
-plt.plot(X, model.predict(X), color='red')
-plt.title('Linear Regression')
-plt.xlabel('X')
-plt.ylabel('y')
-plt.show()
-
-# Print evaluation metrics
-print(f'Mean Squared Error: {mse}')
-print(f'R^2 Score: {r2}')
-`,
-  },
-  {
-    name: "find s",
-    code: `data = [
-    ['Sunny', 'Warm', 'Normal', 'Strong', 'Warm', 'Same', 'Yes'],
-    ['Sunny', 'Warm', 'High', 'Strong', 'Warm', 'Same', 'Yes']
-]
-
-hypothesis = ['Ø'] * 6
-
-for row in data:
-    if row[-1] == 'Yes':
-        for i in range(6):
-            if hypothesis[i] == 'Ø':
-                hypothesis[i] = row[i]
-            elif hypothesis[i] != row[i]:
-                hypothesis[i] = '?'
-
-print("Final Hypothesis:", hypothesis)
-`,
-  },
-  {
-    name: "candidate elimination",
-    code: `import copy
-
-data = [
-    ['Sunny', 'Warm', 'Normal', 'Strong', 'Warm', 'Same', 'Yes'],
-    ['Sunny', 'Warm', 'High', 'Strong', 'Warm', 'Same', 'Yes'],
-    ['Rainy', 'Cold', 'High', 'Strong', 'Warm', 'Change', 'No']
-]
-
-attributes = len(data[0]) - 1
-S = data[0][:-1]
-G = [['?' for _ in range(attributes)]]
-
-for row in data:
-    if row[-1] == 'Yes':
-        for i in range(attributes):
-            if S[i] != row[i]:
-                S[i] = '?'
-        G = [g for g in G if all(g[i] == '?' or g[i] == S[i] for i in range(attributes))]
-    else:
-        G_new = []
-        for g in G:
-            for i in range(attributes):
-                if g[i] == '?':
-                    for val in ['Sunny', 'Rainy', 'Warm', 'Cold', 'Normal', 'High', 'Weak', 'Strong', 'Change', 'Same']:
-                        if val != row[i]:
-                            new_hypo = g[:]
-                            new_hypo[i] = val
-                            G_new.append(new_hypo)
-        G = G_new
-
-print("Final Specific Hypothesis:", S)
-print("Final General Hypotheses:", G)
-`,
-  },
-  {
-    name: "water jug",
+    name: "waterjug",
     code: `def heuristic(x, y, Z):  # heuristic function for calculation of best path
     return abs(Z - x) + abs(Z - y)
 
@@ -398,111 +162,408 @@ hill_climbing(4, 3, 2)
 `,
   },
   {
-    name: "TSP.JAVA",
-    code: `def heuristic(x, y, Z):  # heuristic function for calculation of best path
-    return abs(Z - x) + abs(Z - y)
-
-def get_next_states(x, y, X, Y):
-    return [
-        (X, y),  # fill X
-        (x, Y),  # fill Y
-        (0, y),  # empty X
-        (x, 0),  # empty Y
-        (x - min(x, Y - y), y + min(x, Y - y)), # x -> y
-        (x + min(y, X - x), y - min(y, X - x))  # y -> x
-    ]
-
-def hill_climbing(X, Y, Z):
-    current = (0, 0)
-    visited = set()
-    path = [current]
-
-    while True:
-        if Z in current:
-            print("Solution found:", path)
-            return
-
-        visited.add(current)
-        neighbors = get_next_states(*current, X, Y)
-
-        best_state = None
-        best_h = 1e8
-
-        for state in neighbors:
-            if state not in visited:
-                h = heuristic(*state, Z)
-                # print(state)
-                if h < best_h:
-                    best_h = h
-                    best_state = state
-
-        if best_state is None:
-            print("Stuck! No solution found.")
-            return
-
-        current = best_state
-        path.append(current)
-
-# x=4, y=3, target=2
-hill_climbing(4, 3, 2)
-`,
-  },
-  {
-    name: "tsp_greedy_java",
+    name: "8puzzle_hillclimb",
     code: `import java.util.*;
 
-public class tsp_greedy {
-    static int N;
-    static int[][] graph;
-    
-    static void readGraph(int[][] inputGraph) {
-        N = inputGraph.length;
-        graph = inputGraph;
-    }
-    
-    static void greedyBFS(int start) {
-        boolean[] visited = new boolean[N];
-        List<Integer> path = new ArrayList<>();
-        int cost = 0, current = start;
-        
-        for (int i = 0; i < N - 1; i++) {
-            visited[current] = true;
-            path.add(current);
-            int nextCity = -1, minCost = Integer.MAX_VALUE;
-            
-            for (int j = 0; j < N; j++) {
-                if (!visited[j] && graph[current][j] < minCost) {
-                    minCost = graph[current][j];
-                    nextCity = j;
+class EightPuzzleHillClimbing {
+    static int[][] goal = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 0 } };
+    static int[][] moves = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
+
+    static int heuristic(int[][] state) {
+        int h = 0;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (state[i][j] != 0) {
+                    int val = state[i][j] - 1; // indexing to 0
+                    int goalX = val / 3, goalY = val % 3; // manhattan distance heuristic for each tile to its goal position
+                    h += Math.abs(i - goalX) + Math.abs(j - goalY); // |x - goalX| + |y - goalY|
                 }
             }
-            
-            if (nextCity == -1) break;
-            cost += minCost;
-            current = nextCity;
         }
-        
-        path.add(start);
-        cost += graph[current][start];
-        System.out.println("Greedy BFS Path: " + path + " Cost: " + cost);
+        return h;
     }
-    
+
+    static int[][] getBestNeighbor(int[][] state) {
+        int bestH = heuristic(state);
+        int[][] bestState = state;
+
+        for (int[] move : moves) {
+            int[][] newState = moveTile(state, move);
+            if (newState != null) {
+                int newH = heuristic(newState);
+                if (newH < bestH) {
+                    bestH = newH;
+                    bestState = newState;
+                }
+            }
+        }
+        return bestState;
+    }
+
+    static int[][] moveTile(int[][] state, int[] move) {
+        int x = 0, y = 0;
+        for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 3; j++)
+                if (state[i][j] == 0) { // finding the empty tile
+                    x = i;
+                    y = j;
+                } 
+
+        int nx = x + move[0], ny = y + move[1];
+        if (nx >= 0 && ny >= 0 && nx < 3 && ny < 3) {
+            int[][] newState = new int[3][3];
+            for (int i = 0; i < 3; i++)
+                newState[i] = state[i].clone();
+            newState[x][y] = newState[nx][ny];
+            newState[nx][ny] = 0;
+            return newState;
+        }
+        return null;
+    }
+
+    static void solve(int[][] start) {
+        int[][] current = start;
+        while (!Arrays.deepEquals(current, goal)) {
+            System.out.println("Before");
+            printState(current);
+            int[][] next = getBestNeighbor(current);
+            System.out.println("After");
+            printState(next);
+            if (Arrays.deepEquals(next, current)) {
+                System.out.println("Stuck in local optimum! No solution found.");
+                return;
+            }
+            current = next;
+            // printState(current);
+        }
+        System.out.println("Solution found!");
+    }
+
+    static void printState(int[][] state) {
+        for (int[] row : state)
+            System.out.println(Arrays.toString(row));
+        System.out.println();
+    }
+
     public static void main(String[] args) {
-        int[][] inputGraph = {
-            {0, 10, 15, 20},
-            {10, 0, 35, 25},
-            {15, 35, 0, 30},
-            {20, 25, 30, 0}
-        };
-        
-        readGraph(inputGraph);
-        greedyBFS(0); // Start from city 0
+        int[][] start = { { 1, 2, 3 }, { 4, 0, 6 }, { 7, 5, 8 } };
+        solve(start);
     }
 }
 `,
   },
-  {name : "tsp_greedy_best_first.java", 
-  code : `import java.util.*;
+  {
+    name: "8puzzle_gbfs_astar",
+    code: `import java.util.*;
+
+class EightPuzzleGBFS {
+    static int[][] goal = {
+        {1, 2, 3},
+        {4, 5, 6},
+        {7, 8, 0}
+    };
+
+    static int heuristic(int[][] state) {
+        int h = 0;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (state[i][j] != 0 && state[i][j] != goal[i][j]) h++;
+            }
+        }
+        return h;
+    }
+
+    static List<int[][]> getNeighbors(int[][] state) {
+        List<int[][]> neighbors = new ArrayList<>();
+        int x = 0, y = 0;
+        
+        for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 3; j++)
+                if (state[i][j] == 0) { x = i; y = j; }
+
+        int[][] moves = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+        for (int[] move : moves) {
+            int nx = x + move[0], ny = y + move[1];
+            if (nx >= 0 && ny >= 0 && nx < 3 && ny < 3) {
+                int[][] newState = new int[3][3];
+                for (int i = 0; i < 3; i++) newState[i] = state[i].clone();
+                newState[x][y] = newState[nx][ny];
+                newState[nx][ny] = 0;
+                neighbors.add(newState);
+            }
+        }
+        return neighbors;
+    }
+
+    static void greedyBestFirstSearch(int[][] start) {
+        PriorityQueue<int[][]> pq = new PriorityQueue<>(Comparator.comparingInt(EightPuzzleGBFS::heuristic));
+        Set<String> visited = new HashSet<>();
+        pq.add(start);
+
+        while (!pq.isEmpty()) {
+            int[][] current = pq.poll();
+            printState(current);
+            if (Arrays.deepEquals(current, goal)) {
+                System.out.println("Solved!");
+                return;
+            }
+
+            visited.add(Arrays.deepToString(current));
+            for (int[][] neighbor : getNeighbors(current)) {
+                if (!visited.contains(Arrays.deepToString(neighbor))) pq.add(neighbor);
+            }
+        }
+        System.out.println("No solution found.");
+    }
+
+    static void printState(int[][] state) {
+        for (int[] row : state) System.out.println(Arrays.toString(row));
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        int[][] start = {
+            {1, 2, 3},
+            {4, 0, 5},
+            {7, 8, 6}
+        };
+        greedyBestFirstSearch(start);
+    }
+}
+
+
+import java.util.*;
+
+class PuzzleNode implements Comparable<PuzzleNode> {
+    int[][] state;
+    int g, h;
+    PuzzleNode parent;
+    
+    public PuzzleNode(int[][] state, int g, int h, PuzzleNode parent) {
+        this.state = state;
+        this.g = g;
+        this.h = h;
+        this.parent = parent;
+    }
+    
+    public int f() {
+        return g + h;
+    }
+    
+    @Override
+    public int compareTo(PuzzleNode other) {
+        return Integer.compare(this.f(), other.f());
+    }
+}
+
+class EightPuzzleAStar {
+    static int[][] goal = {
+        {1, 2, 3},
+        {4, 5, 6},
+        {7, 8, 0}
+    };
+    
+    static int heuristic(int[][] state) {
+        int h = 0;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (state[i][j] != 0) {
+                    int val = state[i][j] - 1;
+                    int goalX = val / 3, goalY = val % 3;
+                    h += Math.abs(i - goalX) + Math.abs(j - goalY);
+                }
+            }
+        }
+        return h;
+    }
+    
+    static List<int[][]> getNeighbors(int[][] state) {
+        List<int[][]> neighbors = new ArrayList<>();
+        int x = 0, y = 0;
+        
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (state[i][j] == 0) {
+                    x = i;
+                    y = j;
+                }
+            }
+        }
+        
+        int[][] moves = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+        for (int[] move : moves) {
+            int nx = x + move[0], ny = y + move[1];
+            if (nx >= 0 && ny >= 0 && nx < 3 && ny < 3) {
+                int[][] newState = new int[3][3];
+                for (int i = 0; i < 3; i++)
+                    newState[i] = state[i].clone();
+                
+                newState[x][y] = newState[nx][ny];
+                newState[nx][ny] = 0;
+                neighbors.add(newState);
+            }
+        }
+        return neighbors;
+    }
+    
+    static void solve(int[][] start) {
+        PriorityQueue<PuzzleNode> pq = new PriorityQueue<>();
+        Set<String> visited = new HashSet<>();
+        pq.add(new PuzzleNode(start, 0, heuristic(start), null));
+        
+        while (!pq.isEmpty()) {
+            PuzzleNode current = pq.poll();
+            
+            if (Arrays.deepEquals(current.state, goal)) {
+                System.out.println("Solution found:");
+                printSolution(current);
+                return;
+            }
+            
+            visited.add(Arrays.deepToString(current.state));
+            for (int[][] neighbor : getNeighbors(current.state)) {
+                if (!visited.contains(Arrays.deepToString(neighbor))) {
+                    pq.add(new PuzzleNode(neighbor, current.g + 1, heuristic(neighbor), current));
+                }
+            }
+        }
+        System.out.println("No solution found");
+    }
+    
+    static void printSolution(PuzzleNode node) {
+        if (node == null) return;
+        printSolution(node.parent);
+        System.out.println("Step:");
+        for (int[] row : node.state) {
+            System.out.println(Arrays.toString(row));
+        }
+        System.out.println();
+    }
+    
+    public static void main(String[] args) {
+        int[][] start = {
+            {1, 2, 3},
+            {4, 0, 5},
+            {7, 8, 6}
+        };
+        solve(start);
+    }
+}
+`,
+  },
+  {
+    name: "tsp",
+    code: `import java.io.*;
+import java.util.*;
+
+public class TSP {
+
+    static int N;
+    static int[][] graph;
+
+    public static void readGraph(String filename) throws IOException {
+        BufferedReader br = new BufferedReader(new FileReader(filename));
+        N = Integer.parseInt(br.readLine());  // Number of cities
+        graph = new int[N][N];
+        
+        // Read the cost matrix (graph)
+        for (int i = 0; i < N; i++) {
+            String[] line = br.readLine().split(" ");
+            for (int j = 0; j < N; j++) {
+                graph[i][j] = Integer.parseInt(line[j]);
+            }
+        }
+        br.close();
+    }
+
+    public static int calculateCost(List<Integer> path) {
+        int cost = 0;
+        for (int i = 0; i < path.size() - 1; i++) {
+            cost += graph[path.get(i)][path.get(i + 1)]; // cost of adjacent nodes
+        }
+        return cost;
+    }
+
+    // BFS for TSP
+    public static void bfs(int start) {
+        Queue<List<Integer>> queue = new LinkedList<>();
+        queue.add(Arrays.asList(start));
+        int minCost = Integer.MAX_VALUE;
+        List<Integer> bestPath = null;
+
+        while (!queue.isEmpty()) {
+            List<Integer> path = queue.poll();
+
+            if (path.size() == N) {
+                path.add(start); // add first city
+                int cost = calculateCost(path);
+                if (cost < minCost) {
+                    minCost = cost;
+                    bestPath = path;
+                }
+                continue;
+            }
+
+            // Explore all the cities that haven't been visited yet
+            for (int i = 0; i < N; i++) {
+                if (!path.contains(i)) {
+                    List<Integer> newPath = new ArrayList<>(path);
+                    newPath.add(i);
+                    queue.add(newPath);
+                }
+            }
+        }
+
+        System.out.println("BFS Best Path: " + bestPath + " Cost: " + minCost);
+    }
+
+    // DFS for TSP
+    public static void dfs(int start) {
+        Stack<List<Integer>> stack = new Stack<>();
+        stack.push(Arrays.asList(start));
+        int minCost = Integer.MAX_VALUE;
+        List<Integer> bestPath = null;
+
+        while (!stack.isEmpty()) {
+            List<Integer> path = stack.pop();
+
+            if (path.size() == N) {
+                path.add(start);  // add start
+                int cost = calculateCost(path);
+                if (cost < minCost) {
+                    minCost = cost;
+                    bestPath = path;
+                }
+                continue;
+            }
+
+            for (int i = 0; i < N; i++) {
+                if (!path.contains(i)) {
+                    List<Integer> newPath = new ArrayList<>(path);
+                    newPath.add(i);
+                    stack.push(newPath);
+                }
+            }
+        }
+
+        System.out.println("DFS Best Path: " + bestPath + " Cost: " + minCost);
+    }
+
+    public static void main(String[] args) throws IOException {
+        readGraph("filename.txt");
+
+        // Run BFS and DFS starting from city 0
+        bfs(0);
+        dfs(0);
+    }
+}
+
+
+`,
+  },
+  {
+    name: "tsp_gbfs",
+    code: `import java.util.*;
 
 class TSPGreedyBestFirst {
     static int N = 4;
@@ -554,12 +615,11 @@ class TSPGreedyBestFirst {
         greedyBestFirstSearch(0);
     }
 }
-`
 
+`,
   },
-
   {
-    name: "tsp_astar_java.",
+    name: "tsp_astar",
     code: `import java.util.*;
 
 class TSPAStar {
@@ -630,7 +690,359 @@ class TSPAStar {
     public static void main(String[] args) {
         aStarTSP(0);
     }
-}`,
+}
+
+`,
+  },
+  {
+    name: "propositional",
+    code: `class Clause:
+    def __init__(self, literals):
+        self.literals = set(literals)  # Store literals in a set for easy resolution
+
+    def resolve(self, other):
+        new_clauses = set()
+        for lit in self.literals:
+            if ('~' + lit) in other.literals or (lit[1:] if lit.startswith('~') else '~' + lit) in other.literals:
+                new_literals = (self.literals | other.literals) - {lit, ('~' + lit) if lit[0] != '~' else lit[1:]}
+                new_clauses.add(Clause(new_literals))
+        return new_clauses
+
+    def is_empty(self):
+        return len(self.literals) == 0
+
+    def __repr__(self):
+        return " OR ".join(self.literals) if self.literals else "∅"
+
+
+class Resolution:
+    def __init__(self, knowledge_base):
+        self.kb = [Clause(stmt) for stmt in knowledge_base]
+
+    def resolution(self, query):
+        negated_query = Clause({'~' + q if q[0] != '~' else q[1:] for q in query})
+        clauses = set(self.kb + [negated_query])
+
+        while True:
+            new_clauses = set()
+            clauses_list = list(clauses)
+
+            for i in range(len(clauses_list)):
+                for j in range(i + 1, len(clauses_list)):
+                    resolvents = clauses_list[i].resolve(clauses_list[j])
+
+                    if any(res.is_empty() for res in resolvents):
+                        return True  # Contradiction found
+
+                    new_clauses.update(resolvents)
+
+            if new_clauses.issubset(clauses):
+                return False  # No new clauses, query cannot be resolved
+
+            clauses.update(new_clauses)
+
+
+# Example Usage
+knowledge_base = [
+    {"~P", "Q"},  # ¬P ∨ Q
+    {"P"},        # P
+]
+
+query = {"Q"}  # Check if Q is entailed
+
+resolver = Resolution(knowledge_base)
+result = resolver.resolution(query)
+
+print("Query is Entailed" if result else "Query is NOT Entailed")
+
+`,
+  },
+  {
+    name: "predicate",
+    code: `class PredicateLogic:
+    def __init__(self):
+        self.clauses = [] # list of clauses
+
+    def add_clause(self, clause):
+        self.clauses.append(clause)
+
+    def unify(self, literal1, literal2):
+        if literal1 == literal2:
+            return {}
+        return None
+
+    def resolve(self, new_clause):
+        for clause in self.clauses:
+            for literal1 in new_clause:
+                for literal2 in clause:
+                    if literal1.startswith('¬'):
+                        negated_literal = literal1[1:]
+                    else:
+                        negated_literal = '¬' + literal1
+
+                    substitution = self.unify(negated_literal, literal2)
+                    if substitution is not None:
+                        resolved_clause = self.apply_substitution(new_clause, clause, substitution)
+                        print(f"Resolved clause: {resolved_clause}")
+                        return resolved_clause
+        return None
+
+    def apply_substitution(self, clause1, clause2, substitution):
+        resolved_clause = [lit for lit in clause1 if lit not in substitution]
+        resolved_clause += [lit for lit in clause2 if lit not in substitution]
+        return resolved_clause
+
+    def __str__(self):
+        # Return a string representation of the clauses.
+        
+        return '\n'.join([' OR '.join(clause) for clause in self.clauses])
+
+logic = PredicateLogic()
+logic.add_clause(['P(x)', 'Q(y)'])
+logic.add_clause(['¬P(a)', 'R(z)'])
+print("Clauses:")
+print(logic)
+resolved = logic.resolve(['¬Q(y)', 'S(c)'])
+print("After resolution:")
+print(resolved)
+`,
+  },
+  {name : "linear and logistic reg", 
+  code : `import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+
+# Step 1: Generate or load dataset
+X = np.array([[1], [2], [3], [4], [5]])  # Feature (Independent variable)
+y = np.array([1, 2, 2.9, 4.1, 5.2])    # Target (Dependent variable)
+
+# Step 2: Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Step 3: Train the model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Step 4: Make predictions
+y_pred = model.predict(X_test)
+
+# Step 5: Evaluate the model
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+
+# Step 6: Visualize the results
+plt.scatter(X, y, color='blue')
+plt.plot(X, model.predict(X), color='red')
+plt.title('Linear Regression')
+plt.xlabel('X')
+plt.ylabel('y')
+plt.show()
+
+# Print evaluation metrics
+print(f'Mean Squared Error: {mse}')
+print(f'R^2 Score: {r2}')
+
+
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, classification_report
+import matplotlib.pyplot as plt
+
+# Step 1: Load the dataset (binary classification)
+X = np.array([[1], [2], [3], [4], [5]])   # Feature
+y = np.array([0, 0, 0, 1, 1])             # Target (binary)
+
+# Step 2: Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Step 3: Train the model
+model = LogisticRegression()
+model.fit(X_train, y_train)
+
+# Step 4: Make predictions
+y_pred = model.predict(X_test)
+
+# Step 5: Evaluate the model
+accuracy = accuracy_score(y_test, y_pred)
+report = classification_report(y_test, y_pred)
+
+# Step 6: Visualize the decision boundary
+X_vals = np.linspace(X.min() - 1, X.max() + 1, 100).reshape(-1, 1)
+y_probs = model.predict_proba(X_vals)[:, 1]
+
+plt.plot(X_vals, y_probs, color='red', label='Logistic Curve')
+plt.scatter(X, y, color='blue', label='Data points')
+plt.axhline(0.5, color='green', linestyle='--', label='Decision Boundary')
+plt.title('Logistic Regression')
+plt.xlabel('X')
+plt.ylabel('Probability')
+plt.legend()
+plt.show()
+
+# Print evaluation metrics
+print(f'Accuracy: {accuracy}')
+print('Classification Report:')
+print(report)
+`,
+
+  },
+
+  {
+    name: "findS candidate elim",
+    code: `data = [
+    ['Sunny', 'Warm', 'Normal', 'Strong', 'Warm', 'Same', 'Yes'],
+    ['Sunny', 'Warm', 'High', 'Strong', 'Warm', 'Same', 'Yes']
+]
+
+hypothesis = ['Ø'] * 6
+
+for row in data:
+    if row[-1] == 'Yes':
+        for i in range(6):
+            if hypothesis[i] == 'Ø':
+                hypothesis[i] = row[i]
+            elif hypothesis[i] != row[i]:
+                hypothesis[i] = '?'
+
+print("Final Hypothesis:", hypothesis)
+
+
+
+import copy
+
+data = [
+    ['Sunny', 'Warm', 'Normal', 'Strong', 'Warm', 'Same', 'Yes'],
+    ['Sunny', 'Warm', 'High', 'Strong', 'Warm', 'Same', 'Yes'],
+    ['Rainy', 'Cold', 'High', 'Strong', 'Warm', 'Change', 'No']
+]
+
+attributes = len(data[0]) - 1
+S = data[0][:-1]
+G = [['?' for _ in range(attributes)]]
+
+for row in data:
+    if row[-1] == 'Yes':
+        for i in range(attributes):
+            if S[i] != row[i]:
+                S[i] = '?'
+        G = [g for g in G if all(g[i] == '?' or g[i] == S[i] for i in range(attributes))]
+    else:
+        G_new = []
+        for g in G:
+            for i in range(attributes):
+                if g[i] == '?':
+                    for val in ['Sunny', 'Rainy', 'Warm', 'Cold', 'Normal', 'High', 'Weak', 'Strong', 'Change', 'Same']:
+                        if val != row[i]:
+                            new_hypo = g[:]
+                            new_hypo[i] = val
+                            G_new.append(new_hypo)
+        G = G_new
+
+print("Final Specific Hypothesis:", S)
+print("Final General Hypotheses:", G)
+
+
+`,
+  },
+  {
+    name:'backprop and dt id3',
+    code:`import numpy as np
+
+# Sigmoid function and derivative
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+
+def sigmoid_deriv(x):
+    return x * (1 - x)
+
+# Training data: XOR logic
+X = np.array([[0, 0],
+              [0, 1],
+              [1, 0],
+              [1, 1]])
+
+y = np.array([[0], [1], [1], [0]])  # XOR output
+
+# Seed for reproducibility
+np.random.seed(1)
+
+# Initialize weights
+input_layer_neurons = 2
+hidden_neurons = 2
+output_neurons = 1
+
+# Weights and biases
+weights_input_hidden = np.random.uniform(size=(input_layer_neurons, hidden_neurons))
+weights_hidden_output = np.random.uniform(size=(hidden_neurons, output_neurons))
+bias_hidden = np.random.uniform(size=(1, hidden_neurons))
+bias_output = np.random.uniform(size=(1, output_neurons))
+
+# Training loop
+epochs = 10000
+lr = 0.1
+
+for epoch in range(epochs):
+    # Forward pass
+    hidden_input = np.dot(X, weights_input_hidden) + bias_hidden
+    hidden_output = sigmoid(hidden_input)
+
+    final_input = np.dot(hidden_output, weights_hidden_output) + bias_output
+    final_output = sigmoid(final_input)
+
+    # Backpropagation
+    error = y - final_output
+    d_output = error * sigmoid_deriv(final_output)
+
+    error_hidden = d_output.dot(weights_hidden_output.T)
+    d_hidden = error_hidden * sigmoid_deriv(hidden_output)
+
+    # Updating weights and biases
+    weights_hidden_output += hidden_output.T.dot(d_output) * lr
+    weights_input_hidden += X.T.dot(d_hidden) * lr
+    bias_output += np.sum(d_output, axis=0, keepdims=True) * lr
+    bias_hidden += np.sum(d_hidden, axis=0, keepdims=True) * lr
+
+# Final output after training
+print("Final Output after training:\\n", final_output.round(3))
+
+
+
+
+
+
+from sklearn.tree import DecisionTreeClassifier, plot_tree
+import matplotlib.pyplot as plt
+import numpy as np
+
+# ---------- 1. Encode categorical features as integers ----------
+# Outlook: 0=Sunny 1=Overcast 2=Rain ; Temp: 0=Hot 1=Mild 2=Cool
+# Humidity: 0=High 1=Normal        ; Wind: 0=Weak 1=Strong
+X = np.array([
+ [0,0,0,0], [0,0,0,1], [1,0,0,0], [2,1,0,0], [2,2,1,0], [2,2,1,1], [1,2,1,1], 
+ [0,1,0,0], [0,2,1,0], [2,1,1,0], [0,1,1,1], [1,1,0,1], [1,0,1,0], [2,1,0,1]
+])
+y = np.array(['Yes','Yes', 'Yes', 'No', 'No',  'No', 'No',
+              'Yes', 'Yes', 'No', 'No', 'No', 'Yes', 'No'])
+
+# ---------- 2. Train ID3 decision tree ----------
+tree = DecisionTreeClassifier(criterion="entropy")
+tree.fit(X, y)
+
+# ---------- 3. Predict for a new day ----------
+# Example day: Outlook=Sunny, Temp=Cool, Humidity=High, Wind=Strong -> [0,2,0,1]
+print("Play Tennis? ->", tree.predict([[2,2,0,0]])[0])
+
+# ---------- 4. Optional: visualize ----------
+plot_tree(tree, feature_names=['Outlook','Temp','Humidity','Wind'],
+          class_names=tree.classes_, filled=True); plt.show()
+
+
+
+
+`
   },
   {
     name: "User Input Example",
